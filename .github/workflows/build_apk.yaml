@@ -1,0 +1,39 @@
+# workflow to get apk
+---
+name: Flutter_Release
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Flutter action
+        uses: subosito/flutter-action@v2.13.0
+        with:
+          flutter-version: "3.24.4"
+          channel: 'stable'
+            
+
+      - name: Install dependencies
+        run: flutter pub get
+
+
+      # Create apk.
+      - name: Start release build
+        run: flutter build apk --release
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build apk file
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 5  
+    
+
+     
